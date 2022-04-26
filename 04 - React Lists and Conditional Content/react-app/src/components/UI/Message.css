@@ -1,0 +1,13 @@
+.message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.message__text {
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: 0.2rem;
+  color: #fafefe;
+  text-transform: uppercase;
+}
