@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
-import { Button, Card } from 'shared/elements';
+import { Button, Card, Modal } from 'shared/elements';
 import { styled } from 'shared/theme';
 
 export const UserForm = props => {
-  const [username, setUsername] = useState('');
-  const [age, setAge] = useState(1);
+  const [name, setUsername] = useState('');
+  const [age, setAge] = useState('');
+  const [error, setError] = useState();
 
   const handleChangeUsername = e => {
     setUsername(e.target.value);
@@ -18,44 +19,78 @@ export const UserForm = props => {
   const handleSubmitUser = e => {
     e.preventDefault();
 
+    if (name.trim().length === 0 || age.trim().length === 0) {
+      setError({
+        title: 'Invalid input',
+        message: 'Please enter a valid name and age (non-empty values)',
+      });
+
+      return;
+    }
+
+    if (+age < 1) {
+      setError({
+        title: 'Invalid age',
+        message: 'Please enter a valid age (> 0)',
+      });
+
+      return;
+    }
+
     const data = {
       id: nanoid(),
-      username,
+      name,
       age,
     };
 
-    props.onSaveUsers(data);
+    props.onAddUser(data);
     setUsername('');
-    setAge(1);
+    setAge('');
+  };
+
+  const errorHandler = () => {
+    setError(null);
   };
 
   return (
-    <Card>
-      <form onSubmit={handleSubmitUser}>
-        <FormControl>
-          <FormLabel htmlFor="username">Username</FormLabel>
-          <FormInput
-            type="text"
-            name="username"
-            value={username}
-            onChange={handleChangeUsername}
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor="age">Age</FormLabel>
-          <FormInput
-            type="number"
-            name="age"
-            value={age}
-            min="1"
-            onChange={handleChangeAge}
-          />
-        </FormControl>
-        <Button type="submit">Add User</Button>
-      </form>
-    </Card>
+    <>
+      {error && (
+        <Modal
+          title={error.title}
+          message={error.message}
+          onConfirm={errorHandler}
+        />
+      )}
+      <Card className="mb-8">
+        <Form onSubmit={handleSubmitUser}>
+          <FormControl>
+            <FormLabel htmlFor="name">Name</FormLabel>
+            <FormInput
+              type="text"
+              name="name"
+              value={name}
+              onChange={handleChangeUsername}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel htmlFor="age">Age</FormLabel>
+            <FormInput
+              type="number"
+              name="age"
+              value={age}
+              onChange={handleChangeAge}
+            />
+          </FormControl>
+          <Button type="submit">Add User</Button>
+        </Form>
+      </Card>
+    </>
   );
 };
+
+const Form = styled.form`
+  padding: 1.8rem 2.4rem;
+`;
 
 const FormControl = styled.div`
   display: flex;

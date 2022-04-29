@@ -15,8 +15,12 @@ export const UserList = props => {
           {props.users.map(user => {
             return (
               <UserItem key={user.id}>
-                {user.username} ({user.age} years old)
-                <button onClick={() => deleteUserItem(user.id)}>
+                {user.name} ({user.age} {user.age > 1 ? 'years ' : 'year '}
+                old)
+                <button
+                  className="btn__icon"
+                  onClick={() => deleteUserItem(user.id)}
+                >
                   <IoTrashOutline className="icon" />
                 </button>
               </UserItem>
@@ -31,6 +35,7 @@ export const UserList = props => {
 const UsersWrapper = styled.ul`
   display: flex;
   flex-direction: column;
+  padding: 1.8rem 2.4rem;
 `;
 
 const UserItem = styled.li`

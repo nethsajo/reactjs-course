@@ -57,10 +57,40 @@ const GlobalStyle = createGlobalStyle`
     list-style: none;
   }
 
-  .icon {
-    width: 2.4rem;
-    height: 2.4rem;
+  .mb-8 {
+    margin-bottom: 3.2rem;
+  }
+
+  .btn__icon {
+    background-color: transparent;
+    border: none;
+    outline: none;
     cursor: pointer;
+  }
+
+  .icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 60rem;
+    overflow: hidden;
+    z-index: 100;
+  }
+
+  .backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.25);
+    z-index: 10;
   }
 `;
 

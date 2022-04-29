@@ -6,16 +6,9 @@ import { UserList } from './UserList';
 const User = props => {
   const [users, setUsers] = useState([]);
 
-  const saveUsers = ({ id, username, age }) => {
+  const addUser = user => {
     setUsers(prevUsers => {
-      return [
-        ...prevUsers,
-        {
-          id,
-          username,
-          age,
-        },
-      ];
+      return [...prevUsers, user];
     });
   };
 
@@ -29,7 +22,7 @@ const User = props => {
 
   return (
     <Wrapper>
-      <UserForm onSaveUsers={saveUsers} />
+      <UserForm onAddUser={addUser} />
       <UserList users={users} onDeleteUser={deleteUser} />
     </Wrapper>
   );
