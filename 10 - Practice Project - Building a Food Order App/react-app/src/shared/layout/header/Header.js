@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { MdShoppingCart } from 'react-icons/md';
+import CartContext from 'context/CartContext';
 import { Button } from 'shared/elements';
 import {
   StyledHeader,
@@ -10,14 +11,20 @@ import {
 import mealsImage from '../../../assets/images/meals.jpg';
 
 export const Header = props => {
+  const context = useContext(CartContext);
+
+  const numberOfItemsInCart = context.items.reduce((accumulator, current) => {
+    return (accumulator += current.quantity);
+  }, 0);
+
   return (
     <>
       <StyledHeader>
         <StyledHeaderTitle>ReactMeals</StyledHeaderTitle>
-        <Button variant="normal">
+        <Button variant="normal" onClick={props.onShowCart}>
           <MdShoppingCart className="icon" />
           <span className="ml-xs">Cart</span>
-          <span className="badge">3</span>
+          <span className="badge">{numberOfItemsInCart}</span>
         </Button>
       </StyledHeader>
       <StyledHeaderImage>
