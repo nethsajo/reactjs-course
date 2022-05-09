@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Input, Button } from 'shared/elements';
 import { StyledMealForm } from 'shared/styles/componentStyles/mealStyles';
 
-import { MdOutlineAdd } from 'react-icons/md';
+import { MdAdd } from 'react-icons/md';
 
 const MealItemForm = props => {
   const [amountIsValid, setAmountIsValid] = useState(true);
@@ -37,7 +37,7 @@ const MealItemForm = props => {
         }}
       />
       <Button type="submit" className="mt-xs mx-auto" variant="primary">
-        <MdOutlineAdd className="icon" />
+        <MdAdd className="icon" />
         <span>Add</span>
       </Button>
       {!amountIsValid && <p>Please enter a valid amount! (1-5)</p>}

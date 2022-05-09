@@ -3,23 +3,60 @@ import CartContext from './CartContext';
 
 const initialCartState = {
   items: [],
-  totalAmount: 0,
 };
 
 const cartReducer = (state, action) => {
-  switch (action.type) {
-    case 'ADD_ITEM':
-      const items = state.items.concat(action.payload);
-      const totalAmount =
-        state.totalAmount + action.payload.price * action.payload.quantity;
+  if (action.type === 'ADD_ITEM') {
+    const isInCart = state.items.find(index => index.id === action.payload.id);
+
+    if (isInCart) {
+      const tempCart = state.items.map(item => {
+        if (item.id === action.payload.id) {
+          let newQuantity = item.quantity + action.payload.quantity;
+          return { ...item, quantity: newQuantity };
+        } else {
+          return item;
+        }
+      });
+      return { ...state, items: tempCart };
+    } else {
       return {
         ...state,
-        items: items,
-        totalAmount: totalAmount,
+        items: [...state.items, action.payload],
       };
-    default:
-      console.log('DEFAULT');
+    }
   }
+
+  if (action.type === 'UPDATE_ITEM_QUANTITY') {
+    const tempCart = state.items.map(item => {
+      if (item.id === action.payload.id) {
+        if (action.payload.type === 'increment') {
+          let newQuantity = item.quantity + 1;
+          return { ...item, quantity: newQuantity };
+        }
+
+        if (action.payload.type === 'decrement') {
+          let newQuantity = item.quantity - 1;
+          if (newQuantity < 1) newQuantity = 1;
+          return { ...item, quantity: newQuantity };
+        }
+      }
+      return item;
+    });
+
+    return { ...state, items: tempCart };
+  }
+
+  if (action.type === 'REMOVE_ITEM') {
+    //With this check, we make sure that all items where the id is not equal to the action id are kept
+    //This returns true and hence the items are kept
+    //This removes the item that is not equal to the action id
+    const tempCart = state.items.filter(item => item.id !== action.payload);
+
+    return { ...state, items: tempCart };
+  }
+
+  return { ...state };
 };
 
 const CartProvider = props => {
@@ -32,15 +69,19 @@ const CartProvider = props => {
     dispatchCartAction({ type: 'ADD_ITEM', payload: item });
   };
 
+  const toggleItemQuantityFromCart = (id, type) => {
+    dispatchCartAction({ type: 'UPDATE_ITEM_QUANTITY', payload: { id, type } });
+  };
+
   const removeItemFromCartHandler = id => {
     dispatchCartAction({ type: 'REMOVE_ITEM', payload: id });
   };
 
   const cartContext = {
     items: cartState.items,
-    totalAmount: cartState.totalAmount,
     addItem: addItemToCartHandler,
     removeItem: removeItemFromCartHandler,
+    toggleItemQuantity: toggleItemQuantityFromCart,
   };
 
   return (
