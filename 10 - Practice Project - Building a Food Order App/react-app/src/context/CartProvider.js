@@ -50,7 +50,7 @@ const cartReducer = (state, action) => {
   if (action.type === 'REMOVE_ITEM') {
     //With this check, we make sure that all items where the id is not equal to the action id are kept
     //This returns true and hence the items are kept
-    //This removes the item that is not equal to the action id
+    //This returns a new array that is not equal to the payload id
     const tempCart = state.items.filter(item => item.id !== action.payload);
 
     return { ...state, items: tempCart };
