@@ -22,9 +22,7 @@ export const Header = props => {
   }, 0);
 
   useEffect(() => {
-    if (items.length === 0) {
-      return;
-    }
+    if (items.length === 0) return;
 
     setBtnIsHighlighted(true);
 
