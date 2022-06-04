@@ -10,8 +10,26 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const addMovieHandler = (movie) => {
-    console.log(movie);
+  const addMovieHandler = async (movie) => {
+    try {
+      const response = await fetch(
+        "https://react-http-post-6f5bd-default-rtdb.asia-southeast1.firebasedatabase.app/movies.json",
+        {
+          method: "POST",
+          header: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(movie),
+        }
+      );
+
+      if (!response.ok) throw new Error("Something went wrong!");
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   const fetchMoviesHandler = useCallback(async () => {
@@ -26,20 +44,37 @@ function App() {
       if (!response.ok) throw new Error("Something went wrong!");
 
       const data = await response.json();
-      const transformedMovies = data.map((movie) => {
-        return {
-          id: movie.episode_id,
-          title: movie.title,
-          releasedData: movie.release_date,
-          openingText: movie.opening_crawl,
-        };
-      });
-      setMovies(transformedMovies);
+      const results = [];
+
+      //When fetching the data, the data variable is a nested object.
+      //In order to convert the data into an array of objects. First, simply create an empty array
+      //Then create a for in loop to loop through all the keys in data (because data is now an object)
+      //Keys are the ids of the movies; example '-N3geapjB7Fx2SowEFXU'
+      //Then simply want to go to results array and then we push a new object for every key value pair that we got in the response data
+      //data[key] => data['-N3geapjB7Fx2SowEFXU'].title, So in here we will get the title within the id of -N3geapjB7Fx2SowEFXU
+      for (const key in data) {
+        results.push({
+          id: key,
+          title: data[key].title,
+          releaseDate: data[key].releaseDate,
+          openingText: data[key].openingText,
+        });
+      }
+
+      // const transformedMovies = results.map((movie) => {
+      //   return {
+      //     id: movie.id,
+      //     title: movie.title,
+      //     releaseDate: movie.releaseDate,
+      //     openingText: movie.openingText,
+      //   };
+      // });
+
+      setMovies(results);
     } catch (error) {
       setError(error.message);
-    } finally {
-      setIsLoading(false);
     }
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {

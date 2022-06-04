@@ -7,7 +7,7 @@ function AddMovie(props) {
   const openingTextRef = useRef("");
   const releaseDateRef = useRef("");
 
-  function submitHandler(event) {
+  const submitHandler = (event) => {
     event.preventDefault();
 
     // could add validation here...
@@ -19,7 +19,7 @@ function AddMovie(props) {
     };
 
     props.onAddMovie(movie);
-  }
+  };
 
   return (
     <form onSubmit={submitHandler}>
